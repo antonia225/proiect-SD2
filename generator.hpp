@@ -6,149 +6,149 @@
 #include <algorithm>
 #include <type_traits>
 
-template <typename T>
-void Generator_Numere_Sortate_Crescator(T minim, T maxim, unsigned long long nr_numere, std::vector<T>& numbers)
-{
-    numbers.clear();
-    if (nr_numere == 0)
-        return;
+// template <typename T>
+// void Generator_Numere_Sortate_Crescator(T minim, T maxim, unsigned long long nr_numere, std::vector<T>& numbers)
+// {
+//     numbers.clear();
+//     if (nr_numere == 0)
+//         return;
 
-    if (maxim < minim)
-        std::swap(maxim, minim);
+//     if (maxim < minim)
+//         std::swap(maxim, minim);
 
-    if (minim == maxim)
-    {
-        for (unsigned long long i = 0; i < nr_numere; i++) 
-            numbers.push_back(minim);
-        return;
-    }
-    else
-    {   
-        std::mt19937 rng(std::random_device{}());
-        std::uniform_real_distribution<double> random(1.5, 2.5);
-        T scalar = random(rng);
-        if constexpr (std::is_floating_point<T>::value)
-        {
-            std::uniform_real_distribution<T> dist(0, static_cast<T>((maxim - minim) / nr_numere * scalar));
-            T current = minim;
-            for (long long i = 0; i < nr_numere; i++) 
-            {
-                T next = current + dist(rng);
-                if (next > maxim) next = maxim;
-                numbers.push_back(next);
-                current = next;
-            }
-        }
-        else
-        {
-            std::uniform_int_distribution<T> dist(0, (static_cast<T>(static_cast<double>(maxim - minim) / nr_numere * scalar) > 1 ? static_cast<T>(static_cast<double>(maxim - minim) / nr_numere * scalar) : 1)); 
-            T current = minim;
-            for (long long i = 0; i < nr_numere; i++) 
-            {
-                T next = current + dist(rng);
-                if (next > maxim) next = maxim;
-                numbers.push_back(next);
-                current = next;
-            }
-        }
-    }
-}
+//     if (minim == maxim)
+//     {
+//         for (unsigned long long i = 0; i < nr_numere; i++) 
+//             numbers.push_back(minim);
+//         return;
+//     }
+//     else
+//     {   
+//         std::mt19937 rng(std::random_device{}());
+//         std::uniform_real_distribution<double> random(1.5, 2.5);
+//         T scalar = random(rng);
+//         if constexpr (std::is_floating_point<T>::value)
+//         {
+//             std::uniform_real_distribution<T> dist(0, static_cast<T>((maxim - minim) / nr_numere * scalar));
+//             T current = minim;
+//             for (long long i = 0; i < nr_numere; i++) 
+//             {
+//                 T next = current + dist(rng);
+//                 if (next > maxim) next = maxim;
+//                 numbers.push_back(next);
+//                 current = next;
+//             }
+//         }
+//         else
+//         {
+//             std::uniform_int_distribution<T> dist(0, (static_cast<T>(static_cast<double>(maxim - minim) / nr_numere * scalar) > 1 ? static_cast<T>(static_cast<double>(maxim - minim) / nr_numere * scalar) : 1)); 
+//             T current = minim;
+//             for (long long i = 0; i < nr_numere; i++) 
+//             {
+//                 T next = current + dist(rng);
+//                 if (next > maxim) next = maxim;
+//                 numbers.push_back(next);
+//                 current = next;
+//             }
+//         }
+//     }
+// }
 
-template <typename T>
-void Generator_Numere_Sortate_Descrescator(T minim, T maxim, unsigned long long nr_numere, std::vector<T>& numbers)
-{
-    numbers.clear();
-    if (nr_numere == 0)
-        return;
+// template <typename T>
+// void Generator_Numere_Sortate_Descrescator(T minim, T maxim, unsigned long long nr_numere, std::vector<T>& numbers)
+// {
+//     numbers.clear();
+//     if (nr_numere == 0)
+//         return;
 
-    if (maxim < minim)
-        std::swap(maxim, minim);
+//     if (maxim < minim)
+//         std::swap(maxim, minim);
 
-    if (minim == maxim)
-    {
-        for (unsigned long long i = 0; i < nr_numere; i++) 
-            numbers.push_back(minim);
-        return;
-    }
-    else
-    {   
-        std::mt19937 rng(std::random_device{}());
-        std::uniform_real_distribution<double> random(1.5, 2.5);
-        T scalar = random(rng);
-        if constexpr (std::is_floating_point<T>::value)
-        {
-            std::uniform_real_distribution<T> dist(0, static_cast<T>((maxim - minim) / nr_numere * scalar));
-            T current = maxim;
-            for (long long i = 0; i < nr_numere; i++) 
-            {
-                T next = current - dist(rng);
-                if (next < minim) next = minim;
-                numbers.push_back(next);
-                current = next;
-            }
-        }
-        else
-        {
-            std::uniform_int_distribution<T> dist(0, (static_cast<T>(static_cast<double>(maxim - minim) / nr_numere * scalar) > 1 ? static_cast<T>(static_cast<double>(maxim - minim) / nr_numere * scalar) : 1)); 
-            T current = maxim;
-            for (long long i = 0; i < nr_numere; i++) 
-            {
-                T next = current - dist(rng);
-                if (next < minim) next = minim;
-                numbers.push_back(next);
-                current = next;
-            }
-        }
-    }
-}
+//     if (minim == maxim)
+//     {
+//         for (unsigned long long i = 0; i < nr_numere; i++) 
+//             numbers.push_back(minim);
+//         return;
+//     }
+//     else
+//     {   
+//         std::mt19937 rng(std::random_device{}());
+//         std::uniform_real_distribution<double> random(1.5, 2.5);
+//         T scalar = random(rng);
+//         if constexpr (std::is_floating_point<T>::value)
+//         {
+//             std::uniform_real_distribution<T> dist(0, static_cast<T>((maxim - minim) / nr_numere * scalar));
+//             T current = maxim;
+//             for (long long i = 0; i < nr_numere; i++) 
+//             {
+//                 T next = current - dist(rng);
+//                 if (next < minim) next = minim;
+//                 numbers.push_back(next);
+//                 current = next;
+//             }
+//         }
+//         else
+//         {
+//             std::uniform_int_distribution<T> dist(0, (static_cast<T>(static_cast<double>(maxim - minim) / nr_numere * scalar) > 1 ? static_cast<T>(static_cast<double>(maxim - minim) / nr_numere * scalar) : 1)); 
+//             T current = maxim;
+//             for (long long i = 0; i < nr_numere; i++) 
+//             {
+//                 T next = current - dist(rng);
+//                 if (next < minim) next = minim;
+//                 numbers.push_back(next);
+//                 current = next;
+//             }
+//         }
+//     }
+// }
 
-template <typename T>
-void Generator_Numere_Aproape_Crescator(T minim, T maxim, unsigned long long nr_numere, std::vector<T>& numbers)
-{
-    numbers.clear();
-    if (nr_numere == 0)
-        return;
+// template <typename T>
+// void Generator_Numere_Aproape_Crescator(T minim, T maxim, unsigned long long nr_numere, std::vector<T>& numbers)
+// {
+//     numbers.clear();
+//     if (nr_numere == 0)
+//         return;
 
-    if (maxim < minim)
-        std::swap(maxim, minim);
+//     if (maxim < minim)
+//         std::swap(maxim, minim);
 
-    Generator_Numere_Sortate_Crescator(minim, maxim, nr_numere, numbers);
+//     Generator_Numere_Sortate_Crescator(minim, maxim, nr_numere, numbers);
 
-    std::mt19937 rng(std::random_device{}());
-    std::uniform_int_distribution<unsigned long long> random(0, nr_numere / 4);
-    unsigned long long swaps = random(rng);
-    std::uniform_int_distribution<unsigned long long> dis(0, nr_numere - 1);
-    for (unsigned long long i = 0; i < swaps; i++)
-    {
-        T id1 = dis(rng);
-        T id2 = dis(rng);
-        std::swap(numbers[id1], numbers[id2]);
-    }
-}
+//     std::mt19937 rng(std::random_device{}());
+//     std::uniform_int_distribution<unsigned long long> random(0, nr_numere / 4);
+//     unsigned long long swaps = random(rng);
+//     std::uniform_int_distribution<unsigned long long> dis(0, nr_numere - 1);
+//     for (unsigned long long i = 0; i < swaps; i++)
+//     {
+//         T id1 = dis(rng);
+//         T id2 = dis(rng);
+//         std::swap(numbers[id1], numbers[id2]);
+//     }
+// }
 
-template <typename T>
-void Generator_Numere_Aproape_Descrescator(T minim, T maxim, unsigned long long nr_numere, std::vector<T>& numbers)
-{
-    numbers.clear();
-    if (nr_numere == 0)
-        return;
+// template <typename T>
+// void Generator_Numere_Aproape_Descrescator(T minim, T maxim, unsigned long long nr_numere, std::vector<T>& numbers)
+// {
+//     numbers.clear();
+//     if (nr_numere == 0)
+//         return;
 
-    if (maxim < minim)
-        std::swap(maxim, minim);
+//     if (maxim < minim)
+//         std::swap(maxim, minim);
 
-    Generator_Numere_Sortate_Descrescator(minim, maxim, nr_numere, numbers);
+//     Generator_Numere_Sortate_Descrescator(minim, maxim, nr_numere, numbers);
 
-    std::mt19937 rng(std::random_device{}());
-    std::uniform_int_distribution<unsigned long long> random(0, nr_numere / 4);
-    unsigned long long swaps = random(rng);
-    std::uniform_int_distribution<unsigned long long> dis(0, nr_numere - 1);
-    for (unsigned long long i = 0; i < swaps; i++)
-    {
-        T id1 = dis(rng);
-        T id2 = dis(rng);
-        std::swap(numbers[id1], numbers[id2]);
-    }
-}
+//     std::mt19937 rng(std::random_device{}());
+//     std::uniform_int_distribution<unsigned long long> random(0, nr_numere / 4);
+//     unsigned long long swaps = random(rng);
+//     std::uniform_int_distribution<unsigned long long> dis(0, nr_numere - 1);
+//     for (unsigned long long i = 0; i < swaps; i++)
+//     {
+//         T id1 = dis(rng);
+//         T id2 = dis(rng);
+//         std::swap(numbers[id1], numbers[id2]);
+//     }
+// }
 
 template <typename T>
 void Generator_Numere_Random_Uniform(T minim, T maxim, unsigned long long nr_numere, std::vector<T>& numbers)
