@@ -1,13 +1,11 @@
+#ifndef Skip_list
+#define Skip_list
+#include<random>
+#include<vector>
 #include <iostream>
-#include <fstream>
 #include <limits>
-#include <vector>
 #include <cstdlib>
-#include <random>
-#include <ctime>
 using namespace std;
-
-ofstream g("output_skip_list.csv");
 
 template<typename T>
 struct Node {
@@ -18,7 +16,6 @@ struct Node {
     Node(T value, int level = 0)
         : value(value), level(level), next(level+1, nullptr) {}
 };
-
 template <typename T>
 struct SkipList {
     Node<T>* head;
@@ -47,7 +44,6 @@ struct SkipList {
     void insert(T value) {
         if (search(value)!=nullptr)
         {
-            g<<"No allowed duplicates,";
             return ;
         }
         Node<T>* update[max_level+2];
@@ -108,6 +104,7 @@ struct SkipList {
         }
         return nullptr;  
     }
+    
     T lowest_greater_than (T x)
     {
         Node<T>* current = head;
@@ -115,48 +112,48 @@ struct SkipList {
             while (current->next[i] != nullptr && current->next[i]->value <= x)
             {
                 if (current->next[i]->value == x)
-                    if (current->next[0]!=tail)
-                        return current->next[0]->value;
+                    if (current->next[i]->next[0]!=tail)
+                        return current->next[i]->next[0]->value;
                 current = current->next[i];
             }
         }
         if(current->next[0]->value>x && current->next[0] != tail)
             return current->next[0]->value;
-        g<<"Value does not exist,";
-        return;  
+        // value if it does not find a greater value
+        return head->value;
     }
+    
     T largest_lower_by (T x)
     {
         Node<T>* current = head;
         for (short int i = max_level; i >= 0; i--) {
             while (current->next[i] != nullptr && current->next[i]->value < x)
-            {
-                if (current->next[i]->value == x)
-                    if (current!=head)
-                        return current->value;
                 current = current->next[i];
-            }
         }
-        if(current->next[0]->value>x && current != head)
+        if(current != head)
             return current->value;
-        g<<"Value does not exist,";
-        return;  
+        // value if it does not find a lower value
+        return head->value;
     }
-    void Interval(T x, T y)
+    
+    vector<T> Interval(T x, T y)
     {
         Node<T>* current = head;
+        vector<T> interval;
         for (short int i = max_level; i >= 0; i--) {
             while (current->next[i] != nullptr && current->next[i]->value < x)
                 current = current->next[i];
             }
+        current = current->next[0];
         while (current->value<=y)
         {
-            g<<current->value<<" ";
+            interval.push_back(current->value);
             current = current->next[0];
         }
-            
+        return interval;
     }
-    void search_delete_max_element()
+    
+    T search_delete_max_element()
     {
         Node<T>* current = head;
         Node<T>* update[max_level + 1];
@@ -165,34 +162,84 @@ struct SkipList {
                 current = current->next[i];
             update[i] = current;
         }
-        if(current != head)
+        if(current->next[0] != tail)
             {
                 current=current->next[0];
-                g<<current->value;
-                for (short int i = 0; i <= max_level; i++) {
+                return current->value;
+                for (short int i = 0; i <= current->level; i++) {
                     update[i]->next[i] = tail;
                 }
                 delete current;
             }
         else{
-            g<<"Value does not exist,";
+            return head->value;
         }
-        return;
     }
-    T union(SkipList<T>* sl1,SkipList<T> sl2)
-    {
-        SkipList<T> union1;
-        Node<T>* current1=sl1.head;
-        Node<T>* current2=sl2.head;
-        Node<T>* current3=union1->head;
+    
+    SkipList<T> union_list(const SkipList<T>& other) const {
+        SkipList<T> result;
 
+        Node<T>* current1 = this->head->next[0];
+        Node<T>* current2 = other.head->next[0];
+        Node<T>* current3 = result.head;
+
+        while (current1 != this->tail || current2 != other.tail) 
+        {
+            short int level = result.random_level();
+            if (level > result.max_level) 
+            {
+                result.max_level = level;
+                result.head->next.resize(level + 1, tail);
+                result.tail->next.resize(level + 1, nullptr);
+            }
+            if (current1->value < current2->value && current1!=this->tail)
+            {
+                Node<T>* next_node = new Node<T>(current1->value, level);
+                current3->next[0] = next_node;
+                current3 = next_node;
+                current1 = current1->next[0];
+            }
+            else if (current1->value == current2->value && current1!=this->tail && current2!=other.tail)
+            {
+                Node<T>* next_node = new Node<T>(current2->value, level);
+                current3->next[0] = next_node;
+                current3 = next_node;
+                current1 = current1->next[0];
+                current2 = current2->next[0];
+            }
+            else if(current2 != other.tail)
+            {
+                Node<T>* next_node = new Node<T>(current2->value, level);
+                current3->next[0] = next_node;
+                current3 = next_node;
+                current2 = current2->next[0];
+            }   
+        }
+        current3->next[0]=result.tail;
+        for (int i=1;i<=result.max_level;i++)
+        {
+            Node<T>* current=result.head;
+            Node<T>* update=current;
+            while(update!=result.tail)
+            {
+                update=update->next[i-1];
+                if(update->level>=i)
+                {
+                    current->next[i]=update;
+                    current=update;
+                }
+            }
+            current->next[i]=result.tail;
+        }
+        return result;
     }
+    /// functie care afiseaza skip-listul
     void print_list() {
         for (int i=0;i<=max_level;i++)
         {
-            cout<<"Level "<<i;
-            Node<T>* current = head;
-            while (current != nullptr) {
+            cout<<"Level "<<i<<" ";
+            Node<T>* current = head->next[i];
+            while (current != tail) {
                 cout << current->value << " ";
                 current = current->next[i];
             }
@@ -201,8 +248,4 @@ struct SkipList {
     }
 
 };
-
-int main() {
-    g<<"Insert,Delete,Search,Lowest_Greater_Than,Largest_Lower_By, Interval";
-    return 0;
-}
+#endif
